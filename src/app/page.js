@@ -1,69 +1,187 @@
-import Image from "next/image";
+import HeroSlider from "@/components/HeroSlider";
+import MobileCarousel from "@/components/MobileCarousel";
+import ContactForm from "@/components/ContactForm";
+import { CONTACT, features, products } from "@/data/site";
+import {
+  CheckCircle,
+  Envelope,
+  Facebook,
+  Instagram,
+  Linkedin,
+  MapMarker,
+  Phone,
+  Youtube,
+} from "@/components/Icons";
+
+function ProductMedia({ product }) {
+  if (product.layout === "single") {
+    return (
+      <div className={`image-widget${product.narrow ? " image-widget-narrow" : ""}`}>
+        <img src={product.images[0]} alt="" loading="lazy" />
+      </div>
+    );
+  }
+  return (
+    <div className="image-grid">
+      {product.images.map((src, i) => (
+        <div className={`image-tile${i === 0 ? " image-tile-enhanced" : ""}`} key={src}>
+          <img src={src} alt="" loading="lazy" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function ProductRow({ product, index }) {
+  const Title = product.tag;
+  const text = (
+    <div className="col">
+      <Title className="heading capitalize">{product.title}</Title>
+      {product.subtitle && <h6 className="heading capitalize subheading">{product.subtitle}</h6>}
+      <div className="text-editor">
+        <p>{product.text}</p>
+      </div>
+      <div>
+        <a className="btn-pill" href={product.href}>More Info</a>
+      </div>
+    </div>
+  );
+  const media = (
+    <div className="col">
+      <ProductMedia product={product} />
+    </div>
+  );
+
+  return (
+    <section className={`product-row ${index % 2 === 0 ? "bg-grey" : "bg-white"}`}>
+      <div className="row">
+        {product.media === "left" ? (
+          <>
+            {media}
+            {text}
+          </>
+        ) : (
+          <>
+            {text}
+            {media}
+          </>
+        )}
+      </div>
+    </section>
+  );
+}
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.js
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main>
+      <HeroSlider />
+      <MobileCarousel />
+
+      {/* About */}
+      <section className="about" id="about">
+        <div className="row">
+          <div className="col anim-hidden" data-anim="fadeInLeft">
+            <h2 className="heading heading-primary about-title">Welcome to SNS IT Solutions!</h2>
+            <div className="text-editor">
+              <p>
+                We are a dynamic, forward-thinking company specializing in the design, Importer,
+                manufacturing, and sale of cutting-edge telecom equipment, along with providing
+                comprehensive IT solutions tailored to meet the diverse needs of both individuals and
+                businesses.
+              </p>
+            </div>
+            <ul className="check-list">
+              <li>
+                <span className="check-list-icon"><CheckCircle /></span>
+                <span className="check-list-text">Professional Team Member</span>
+              </li>
+              <li>
+                <span className="check-list-icon"><CheckCircle /></span>
+                <span className="check-list-text">Dedicated Tech Services</span>
+              </li>
+            </ul>
+          </div>
+          <div className="col anim-hidden" data-anim="fadeInRight" />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* Products */}
+      {products.map((product, i) => (
+        <ProductRow product={product} index={i} key={product.href} />
+      ))}
+
+      {/* Why choose us */}
+      <section className="choose" id="choose">
+        <h2 className="heading heading-primary text-center anim-hidden" data-anim="fadeInUp">
+          Why Choose SNS IT Solutions?
+        </h2>
+        <div className="choose-grid">
+          {features.map((f, i) => (
+            <div className="choose-col" key={f.title}>
+              <div className="card anim-hidden" data-anim="fadeInUp" data-anim-delay={i * 250}>
+                <div className="card-image">
+                  <img src={f.image} alt={f.title} loading="lazy" />
+                </div>
+                <div className="card-content">
+                  <h3 className="card-title">
+                    <span>{f.title}</span>
+                  </h3>
+                  <div className="card-text">
+                    <p>{f.text}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
-      </main>
-    </div>
+      </section>
+
+      {/* Contact */}
+      <section className="contact" id="contact">
+        <div className="contact-overlay" />
+        <div className="contact-inner">
+          <h2 className="heading contact-title anim-hidden" data-anim="fadeInUp">Get In Touch</h2>
+          <div className="text-editor contact-intro anim-hidden" data-anim="fadeInUp">
+            <p>Do you have any questions? Don’t hesitate to contact us to know more about us.</p>
+          </div>
+          <div className="contact-row">
+            <div className="contact-col contact-col-form anim-hidden" data-anim="fadeInLeft">
+              <h2 className="heading heading-primary">Send Message</h2>
+              <ContactForm />
+            </div>
+            <div className="contact-col contact-col-info">
+              <div className="icon-box anim-hidden" data-anim="fadeInRight">
+                <span className="icon-box-icon"><MapMarker /></span>
+                <div className="icon-box-content">
+                  <h5 className="icon-box-title"><span>Address: </span></h5>
+                  <p className="icon-box-desc">{CONTACT.address}</p>
+                </div>
+              </div>
+              <div className="icon-box anim-hidden" data-anim="fadeInRight" data-anim-delay="250">
+                <span className="icon-box-icon"><Envelope /></span>
+                <div className="icon-box-content">
+                  <h5 className="icon-box-title"><span>Email ID: </span></h5>
+                  <p className="icon-box-desc">{CONTACT.email}</p>
+                </div>
+              </div>
+              <div className="icon-box anim-hidden" data-anim="fadeInRight" data-anim-delay="500">
+                <span className="icon-box-icon"><Phone /></span>
+                <div className="icon-box-content">
+                  <h5 className="icon-box-title"><span>Mobile No: </span></h5>
+                  <p className="icon-box-desc">{CONTACT.phone}</p>
+                </div>
+              </div>
+              <h4 className="heading follow-title anim-hidden" data-anim="fadeInUp">Follow Us</h4>
+              <div className="social-icons social-icons-contact anim-hidden" data-anim="fadeInUp">
+                <a href="#" target="_blank" className="si-facebook" aria-label="Facebook"><Facebook /></a>
+                <a href="#" target="_blank" className="si-instagram" aria-label="Instagram"><Instagram /></a>
+                <a href="#" target="_blank" className="si-youtube" aria-label="Youtube"><Youtube /></a>
+                <a href="#" target="_blank" className="si-linkedin" aria-label="Linkedin"><Linkedin /></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
   );
 }
